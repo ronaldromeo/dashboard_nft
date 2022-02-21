@@ -74,6 +74,7 @@
       src="https://canvasjs.com/assets/script/jquery-1.11.1.min.js"
     ></script>
     <script type="text/javascript" src="canvasjs.stock.min.js"></script>
+    <scrypt type="text/javascript" src=""></scrypt>
     <script type="text/javascript">
       window.onload = function () {
         var dataPoints1 = [],
@@ -185,6 +186,91 @@
           );
         }
       };
+    </script>
+
+    <script type="text/javascript">
+      function prepareToConvert() {
+        var curr1 = document.getElementById("selection1");
+        var curr2 = document.getElementById("selection2");
+        var val1 = document.getElementById("enterValue");
+        var val2Control = document.getElementById("amount");
+        let val2 = 0;
+        if (
+          curr1.value != undefined &&
+          curr2.value != undefined &&
+          val1.value != undefined
+        ) {
+          if (curr1.value == curr2.value) {
+            alert("Currencies are the same!");
+            val2Control.value = 0;
+            return;
+          }
+          val2 = convertCurrency(curr1.value, val1.value, curr2.value);
+        }
+        val2Control.value = val2;
+      }
+
+      function convertCurrency(curr1, val1, curr2) {
+        if (curr1 == "" && curr2 == "") return 0;
+
+        let val2 = 0;
+        switch (curr1) {
+          case "BNB":
+            switch (curr2) {
+              case "UST":
+                val2 = 10;
+                break;
+              case "BUSD":
+                val2 = 20;
+                break;
+              case "USDC":
+                val2 = 30;
+                break;
+            }
+            break;
+          case "UST":
+            switch (curr2) {
+              case "BNB":
+                val2 = 40;
+                break;
+              case "BUSD":
+                val2 = 50;
+                break;
+              case "USDC":
+                val2 = 60;
+                break;
+            }
+            break;
+          case "BUSD":
+            switch (curr2) {
+              case "BNB":
+                val2 = 70;
+                break;
+              case "UST":
+                val2 = 80;
+                break;
+              case "USDC":
+                val2 = 80;
+                break;
+            }
+            break;
+          case "USDC":
+            switch (curr2) {
+              case "BNB":
+                val2 = 90;
+                break;
+              case "UST":
+                val2 = 100;
+                break;
+              case "BUSD":
+                val2 = 110;
+                break;
+            }
+            break;
+        }
+
+        return val2;
+      }
     </script>
   </head>
   <body>
@@ -340,7 +426,7 @@
               </a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="#icons">
+              <a class="nav-link" href="javascript:alert('Connecting')">
                 <i class="menu-icon mdi mdi-layers-outline"></i>
                 <span class="menu-title">Connect Wallet</span>
               </a>
@@ -422,6 +508,7 @@
                                           >Balance: 1,000</span
                                         >
                                         <select
+                                          id="selection1"
                                           class="selection-2"
                                           name="service"
                                         >
@@ -440,9 +527,10 @@
                                       data-validate="Value is required"
                                     >
                                       <input
+                                        id="enterValue"
                                         class="input100"
                                         type="number"
-                                        name="name"
+                                        name="enterValue"
                                         placeholder="Enter value"
                                         required
                                       />
@@ -455,6 +543,7 @@
                                       >
                                       <div>
                                         <select
+                                          id="selection2"
                                           class="selection-2"
                                           name="service"
                                         >
@@ -473,9 +562,10 @@
                                       data-validate="Value is required"
                                     >
                                       <input
+                                        id="amount"
                                         class="input100"
                                         type="number"
-                                        name="name"
+                                        name="amount"
                                         placeholder="Amount"
                                         disabled
                                       />
@@ -487,7 +577,11 @@
                                         <div
                                           class="contact100-form-bgbtn"
                                         ></div>
-                                        <button class="contact100-form-btn">
+                                        <button
+                                          class="contact100-form-btn"
+                                          onclick="prepareToConvert()"
+                                          type="button"
+                                        >
                                           <span>
                                             Swap Now
                                             <i

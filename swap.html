@@ -39,6 +39,92 @@
 <!--===============================================================================================-->
 	<link rel="stylesheet" type="text/css" href="css/util.css">
 	<link rel="stylesheet" type="text/css" href="css/main.css">
+
+  <script type="text/javascript">
+    function prepareToConvert() {
+      var curr1 = document.getElementById("selection1");
+      var curr2 = document.getElementById("selection2");
+      var val1 = document.getElementById("enterValue");
+      var val2Control = document.getElementById("amount");
+      let val2 = 0;
+      if (
+        curr1.value != undefined &&
+        curr2.value != undefined &&
+        val1.value != undefined
+      ) {
+        if (curr1.value == curr2.value) {
+          alert("Currencies are the same!");
+          val2Control.value = 0;
+          return;
+        }
+        val2 = convertCurrency(curr1.value, val1.value, curr2.value);
+      }
+      val2Control.value = val2;
+    }
+
+    function convertCurrency(curr1, val1, curr2) {
+      if (curr1 == "" && curr2 == "") return 0;
+
+      let val2 = 0;
+      switch (curr1) {
+        case "BNB":
+          switch (curr2) {
+            case "UST":
+              val2 = 10;
+              break;
+            case "BUSD":
+              val2 = 20;
+              break;
+            case "USDC":
+              val2 = 30;
+              break;
+          }
+          break;
+        case "UST":
+          switch (curr2) {
+            case "BNB":
+              val2 = 40;
+              break;
+            case "BUSD":
+              val2 = 50;
+              break;
+            case "USDC":
+              val2 = 60;
+              break;
+          }
+          break;
+        case "BUSD":
+          switch (curr2) {
+            case "BNB":
+              val2 = 70;
+              break;
+            case "UST":
+              val2 = 80;
+              break;
+            case "USDC":
+              val2 = 80;
+              break;
+          }
+          break;
+        case "USDC":
+          switch (curr2) {
+            case "BNB":
+              val2 = 90;
+              break;
+            case "UST":
+              val2 = 100;
+              break;
+            case "BUSD":
+              val2 = 110;
+              break;
+          }
+          break;
+      }
+
+      return val2;
+    }
+  </script>
+
   
 </head>
 <body>
@@ -182,7 +268,7 @@
 					<span class="label-input100">Currency</span>
 				<div>
 						<span class="label-input100" style="float:right;font-weight:bold;">Balance: 1,000</span>
-						<select class="selection-2" name="service">
+						<select id="selection1" class="selection-2" name="service">
 							<option>Choose </option>
               <option>BNB</option>
               <option>UST</option>
@@ -194,14 +280,16 @@
 				</div>
 				
 				<div class="wrap-input100 validate-input" data-validate="Value is required">
-					<input class="input100" type="number" name="name" placeholder="Enter value" required>
+					<input class="input100" type="number" id="enterValue" name="enterValue" placeholder="Enter value" required>
 					<span class="focus-input100"></span>
 				</div>
 
 				<div class="wrap-input100 input100-select">
 					<span class="label-input100">Currency</span>
 					<div>
-						<select class="selection-2" name="service">
+						<select 
+            id="selection2"
+            class="selection-2" name="service">
 							<option>Choose </option>
               <option>BNB</option>
               <option>UST</option>
@@ -213,14 +301,14 @@
 				</div>
 				
 				<div class="wrap-input100 validate-input" data-validate="Value is required">
-					<input class="input100" type="number" name="name" placeholder="Amount" disabled>
+					<input class="input100" type="number" id="amount" name="amount" placeholder="Amount" disabled>
 					<span class="focus-input100"></span>
 				</div>
 
 				<div class="container-contact100-form-btn">
 					<div class="wrap-contact100-form-btn">
 						<div class="contact100-form-bgbtn"></div>
-						<button class="contact100-form-btn">
+						<button class="contact100-form-btn" type="button" onclick="prepareToConvert()">
 							<span>
 								Swap Now
 								<i class="fa fa-long-arrow-right m-l-7" aria-hidden="true"></i>
