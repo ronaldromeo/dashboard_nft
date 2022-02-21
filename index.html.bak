@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <title> Admin Dashboard Statistics  </title>
+  <!-- plugins:css -->
+  <link rel="stylesheet" href="vendors/feather/feather.css">
+  <link rel="stylesheet" href="vendors/mdi/css/materialdesignicons.min.css">
+  <link rel="stylesheet" href="vendors/ti-icons/css/themify-icons.css">
+  <link rel="stylesheet" href="vendors/typicons/typicons.css">
+  <link rel="stylesheet" href="vendors/simple-line-icons/css/simple-line-icons.css">
+  <link rel="stylesheet" href="vendors/css/vendor.bundle.base.css">
+  <!-- endinject -->
+  <!-- Plugin css for this page -->
+  <link rel="stylesheet" href="vendors/datatables.net-bs4/dataTables.bootstrap4.css">
+  <link rel="stylesheet" href="js/select.dataTables.min.css">
+  <!-- End plugin css for this page -->
+  <!-- inject:css -->
+  <link rel="stylesheet" href="css/vertical-layout-light/style.css">
+  <!-- endinject -->
+  <link rel="shortcut icon" href="images/logo.jpg" />
+  
+      <!--===============================================================================================-->
+	<link rel="icon" type="image/png" href="images/icons/favicon.ico"/>
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="vendor/bootstrap/css/bootstrap.min.css">
+	<link rel="stylesheet" type="text/css" href="vendor/animate/animate.css">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="vendor/css-hamburgers/hamburgers.min.css">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="vendor/animsition/css/animsition.min.css">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="vendor/select2/select2.min.css">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="vendor/daterangepicker/daterangepicker.css">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="css/util.css">
+	<link rel="stylesheet" type="text/css" href="css/main.css">
+  
+  
+  <!-- chart -->
+  <script type="text/javascript" src="https://canvasjs.com/assets/script/jquery-1.11.1.min.js"></script>
+  <script type="text/javascript" src="canvasjs.stock.min.js"></script>
+  <script type="text/javascript">
+  window.onload = function () {
+  var dataPoints1 = [], dataPoints2 = [], dataPoints3 = [];
+  var stockChart = new CanvasJS.StockChart("chartContainer",{
+    theme: "light2",
+    exportEnabled: true,
+    title:{
+      text:"Price & Volume"
+    },
+    charts: [{
+      toolTip: {
+        shared: true
+      },
+      axisX: {
+        lineThickness: 5,
+        tickLength: 0,
+        labelFormatter: function(e) {
+          return "";
+        }
+      },
+      axisY: {
+        prefix: "$"
+      },
+      legend: {
+        verticalAlign: "top"
+      },
+      data: [{
+        showInLegend: true,
+        name: "Stock Price (in USD)",
+        yValueFormatString: "$#,###.##",
+        type: "candlestick",
+        dataPoints : dataPoints1
+      }]
+    },{
+      height: 100,
+      toolTip: {
+        shared: true
+      },
+      axisY: {
+        prefix: "$",
+        labelFormatter: addSymbols
+      },
+      legend: {
+        verticalAlign: "top"
+      },
+      data: [{
+        showInLegend: true,
+        name: "Volume (BTC/USD)",
+        yValueFormatString: "$#,###.##",
+        dataPoints : dataPoints2
+      }]
+    }],
+    navigator: {
+      data: [{
+        dataPoints: dataPoints3
+      }],
+      slider: {
+        minimum: new Date(2018, 06, 01),
+        maximum: new Date(2018, 08, 01)
+      }
+    }
+  });
+  $.getJSON("https://canvasjs.com/data/docs/btcusd2018.json", function(data) {
+    for(var i = 0; i < data.length; i++){
+      dataPoints1.push({x: new Date(data[i].date), y: [Number(data[i].open), Number(data[i].high), Number(data[i].low), Number(data[i].close)]});;
+      dataPoints2.push({x: new Date(data[i].date), y: Number(data[i].volume_usd)});
+      dataPoints3.push({x: new Date(data[i].date), y: Number(data[i].close)});
+    }
+    stockChart.render();
+  });
+  function addSymbols(e){
+    var suffixes = ["", "K", "M", "B"];
+    var order = Math.max(Math.floor(Math.log(e.value) / Math.log(1000)), 0);
+    if(order > suffixes.length - 1)
+      order = suffixes.length - 1;
+    var suffix = suffixes[order];
+    return CanvasJS.formatNumber(e.value / Math.pow(1000, order)) + suffix;
+  }
+}
+</script>
+</head>
+<body>
+  <div class="container-scroller">
+    
+    <!-- partial:partials/_navbar.html -->
+    <nav class="navbar default-layout col-lg-12 col-12 p-0 fixed-top d-flex align-items-top flex-row">
+      <div class="text-center navbar-brand-wrapper d-flex align-items-center justify-content-start">
+        <div class="me-3">
+          <button class="navbar-toggler navbar-toggler align-self-center" type="button" data-bs-toggle="minimize">
+            <span class="icon-menu"></span>
+          </button>
+        </div>
+        <div>
+          <a class="navbar-brand brand-logo" href="index.html">
+            <h2> Heading </h2>
+          </a>
+          <a class="navbar-brand brand-logo-mini" href="index.html">
+            <img src="images/logo.jpg" alt="logo" />
+          </a>
+        </div>
+      </div>
+      <div class="navbar-menu-wrapper d-flex align-items-top"> 
+        <ul class="navbar-nav">
+          <li class="nav-item font-weight-semibold d-none d-lg-block ms-0">
+            <h1 class="welcome-text">Good Day, <span class="text-black fw-bold">Admin</span></h1>
+            <h3 class="welcome-sub-text">Your performance summary this week </h3>
+          </li>
+        </ul>
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item d-none d-lg-block">
+            <div id="datepicker-popup" class="input-group date datepicker navbar-date-picker">
+              <span class="input-group-addon input-group-prepend border-right">
+                <span class="icon-calendar input-group-text calendar-icon"></span>
+              </span>
+              <input type="text" class="form-control">
+            </div>
+          </li>
+       
+          <li class="nav-item dropdown d-none d-lg-block user-dropdown">
+            <a class="nav-link" id="UserDropdown" href="#" data-bs-toggle="dropdown" aria-expanded="false">
+              <img class="img-xs rounded-circle" src="images/faces/avatar.png" alt="Profile image"> </a>
+            <div class="dropdown-menu dropdown-menu-right navbar-dropdown" aria-labelledby="UserDropdown">
+              <div class="dropdown-header text-center">
+                <img class="img-xs rounded-circle" src="images/faces/avatar.png" alt="Profile image">
+                <p class="mb-1 mt-3 font-weight-semibold">Admin</p>
+                <p class="fw-light text-muted mb-0">admin@gmail.com</p>
+              </div>
+              <a class="dropdown-item"><i class="dropdown-item-icon mdi mdi-power text-primary me-2"></i>Sign Out</a>
+            </div>
+          </li>
+        </ul>
+        <button class="navbar-toggler navbar-toggler-right d-lg-none align-self-center" type="button" data-bs-toggle="offcanvas">
+          <span class="mdi mdi-menu"></span>
+        </button>
+      </div>
+    </nav>
+    <!-- partial -->
+    <div class="container-fluid page-body-wrapper">
+      <nav class="sidebar sidebar-offcanvas" id="sidebar">
+        <ul class="nav">
+          <li class="nav-item active">
+            <a class="nav-link" href="index.html">
+              <i class="mdi mdi-grid-large menu-icon"></i>
+              <span class="menu-title">Dashboard</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#ui-basic">
+              <i class="menu-icon mdi mdi-floor-plan"></i>
+              <span class="menu-title">NFT Marketplace</span>
+			  
+			    </a>
+				<!--
+              <i class="menu-arrow"></i> 
+          
+            <div class="collapse" id="ui-basic">
+              <ul class="nav flex-column sub-menu">
+                <li class="nav-item"> <a class="nav-link" href="pages/ui-features/buttons.html">Buttons</a></li>
+                <li class="nav-item"> <a class="nav-link" href="pages/ui-features/dropdowns.html">Dropdowns</a></li>
+                <li class="nav-item"> <a class="nav-link" href="pages/ui-features/typography.html">Typography</a></li>
+              </ul>
+            </div>
+			-->
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#form-elements">
+              <i class="menu-icon mdi mdi-card-text-outline"></i>
+              <span class="menu-title">Launchpad</span>
+            </a>
+          </li>
+		  <li class="nav-item">
+            <a class="nav-link" href="swap.html">
+              <i class="menu-icon mdi mdi-swap-horizontal"></i>
+              <span class="menu-title">Swap</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#charts">
+              <i class="menu-icon mdi mdi-chart-line"></i>
+              <span class="menu-title">KYC NFT</span>
+              <i class="menu-arrow"></i>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#tables">
+              <i class="menu-icon mdi mdi-table"></i>
+              <span class="menu-title">Deposit Fiat</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#icons">
+              <i class="menu-icon mdi mdi-layers-outline"></i>
+              <span class="menu-title">Connect Wallet</span>
+            </a>
+          </li>
+        </ul>
+      </nav>
+      <!-- partial -->
+      <div class="main-panel">
+        <div class="content-wrapper">
+          <div class="row">
+            <div class="col-sm-12">
+              <div class="home-tab">
+                <div class="tab-content tab-content-basic">
+                  <div class="tab-pane fade show active" id="overview" role="tabpanel" aria-labelledby="overview">  
+                    <div class="row">
+                      <div class="col-lg-8 d-flex flex-column">
+                        <div class="row flex-grow">
+                          <div class="col-12 col-lg-4 col-lg-12 grid-margin stretch-card">
+                            <div class="card card-rounded">
+                              <div class="card-body">
+                                <div class="d-sm-flex justify-content-between align-items-start">
+                                  <div>
+                                   <h4 class="card-title card-title-dash">Performance Line Chart</h4>
+                                   <h5 class="card-subtitle card-subtitle-dash">Lorem Ipsum is simply dummy text of the printing</h5>
+                                  </div>
+                                  <div id="performance-line-legend"></div>
+                                </div>
+                                  <div id="chartContainer" style="height: 400px; max-width: 920px; margin: 0px auto;"></div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-lg-4 d-flex flex-column">
+                        <div class="row flex-grow">
+                          <div class="col-12 grid-margin stretch-card">
+							  <div class="card">
+								<div class="card-body">
+												<form class="contact100-form validate-form">
+				<span class="contact100-form-title">
+					Swap
+				</span>
+			<hr>
+			
+				<div class="wrap-input100 input100-select">
+					<span class="label-input100">Currency</span>
+				<div>
+						<span class="label-input100" style="float:right;font-weight:bold;">Balance: 1,000</span>
+						<select class="selection-2" name="service">
+							<option>Choose </option>
+							<option>BNB</option>
+							<option>BNB2</option>
+							<option>BNB3</option>
+							<option>BNB4</option>
+						</select>
+					</div>
+					<span class="focus-input100"></span>
+				</div>
+				
+				<div class="wrap-input100 validate-input" data-validate="Value is required">
+					<input class="input100" type="number" name="name" placeholder="Enter value" required>
+					<span class="focus-input100"></span>
+				</div>
+
+				<div class="wrap-input100 input100-select">
+					<span class="label-input100">Currency</span>
+					<div>
+						<select class="selection-2" name="service">
+							<option>Choose </option>
+							<option>BNB</option>
+							<option>BNB2</option>
+							<option>BNB3</option>
+							<option>BNB4</option>
+						</select>
+					</div>
+					<span class="focus-input100"></span>
+				</div>
+				
+				<div class="wrap-input100 validate-input" data-validate="Value is required">
+					<input class="input100" type="number" name="name" placeholder="Amount" disabled>
+					<span class="focus-input100"></span>
+				</div>
+
+				<div class="container-contact100-form-btn">
+					<div class="wrap-contact100-form-btn">
+						<div class="contact100-form-bgbtn"></div>
+						<button class="contact100-form-btn">
+							<span>
+								Swap Now
+								<i class="fa fa-long-arrow-right m-l-7" aria-hidden="true"></i>
+							</span>
+						</button>
+					</div>
+				</div>
+			</form>
+								</div>					
+							  </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-lg-8 d-flex flex-column">
+                        <div class="row flex-grow">
+                          <div class="col-12 grid-margin stretch-card">
+                            <div class="card card-rounded">
+                              <div class="card-body">
+                                <div class="d-sm-flex justify-content-between align-items-start">
+                                  <div>
+                                    <h4 class="card-title card-title-dash">Market Overview</h4>
+                                   <p class="card-subtitle card-subtitle-dash">Lorem ipsum dolor sit amet consectetur adipisicing elit</p>
+                                  </div>
+                                </div>
+                                <div class="d-sm-flex align-items-center mt-1 justify-content-between">
+                                  <div class="d-sm-flex align-items-center mt-4 justify-content-between"><h2 class="me-2 fw-bold">$36,2531.00</h2><h4 class="me-2">USD</h4><h4 class="text-success">(+1.37%)</h4></div>
+                                  <div class="me-3"><div id="marketing-overview-legend"></div></div>
+                                </div>
+                                <div class="chartjs-bar-wrapper mt-3">
+                                  <canvas id="marketingOverview"></canvas>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+
+                      </div>
+					  
+					  <div class="col-lg-4 d-flex flex-column">
+                <div class="col-12 grid-margin stretch-card">
+              <div class="card">
+                <div class="card-body">
+                  <h4 class="card-title"> Assets </h4>
+                  <div class="table-responsive">
+                    <table class="table table-hover">
+                      <thead>
+                        <tr>
+                          <th>Currency</th>
+                          <th>Sale</th>
+                          <th>Status</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td>ANY/BTC</td>
+                          <td class="text-danger"> 0.004548 </td>
+                          <td class="text-danger">-25.48% <i class="ti-arrow-down"></i></td>
+                        </tr>
+                        <tr>
+                          <td>ANY/BUSD</td>
+                          <td class="text-danger"> 20.26 </td>
+                          <td class="text-danger">-9.08% <i class="ti-arrow-down"></i></td>
+                        </tr>
+                        <tr>
+                          <td>ANY/USDT</td>
+                          <td class="text-success"> 500.27 </td>
+                          <td class="text-success">+75.48% <i class="ti-arrow-up"></i></td>
+                        </tr>
+                        <tr>
+                          <td>ASR/BTC</td>
+                          <td class="text-danger"> 0.0000741 </td>
+                          <td class="text-danger">-1.8% <i class="ti-arrow-down"></i></td>
+                        </tr>
+                        <tr>
+                          <td>ASR/USDT</td>
+                          <td class="text-success"> 15.77 </td>
+                          <td class="text-success"> +5.48% <i class="ti-arrow-up"></i></td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>		
+				<center>
+					<button type="button" class="btn btn-primary">Staking</button>
+					<button type="button" class="btn btn-warning">Farming</button>
+					<button type="button" class="btn btn-info">Apply for Listing</button>				
+					<button type="button" class="btn btn-dark">Apply for Launchpad</button>		
+				</center>
+              </div>
+                          </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- content-wrapper ends -->
+        <!-- partial:partials/_footer.html -->
+        <!-- partial -->
+      </div>
+      <!-- main-panel ends -->
+    </div>
+    <!-- page-body-wrapper ends -->
+  </div>
+  <!-- container-scroller -->
+
+  <!-- plugins:js -->
+  <script src="vendors/js/vendor.bundle.base.js"></script>
+  <!-- endinject -->
+  <!-- Plugin js for this page -->
+  <script src="vendors/chart.js/Chart.min.js"></script>
+  <script src="vendors/bootstrap-datepicker/bootstrap-datepicker.min.js"></script>
+  <script src="vendors/progressbar.js/progressbar.min.js"></script>
+
+  <!-- End plugin js for this page -->
+  <!-- inject:js -->
+  <script src="js/off-canvas.js"></script>
+  <script src="js/hoverable-collapse.js"></script>
+  <script src="js/template.js"></script>
+  <script src="js/settings.js"></script>
+  <script src="js/todolist.js"></script>
+  <!-- endinject -->
+  <!-- Custom js for this page-->
+  <script src="js/jquery.cookie.js" type="text/javascript"></script>
+  <script src="js/dashboard.js"></script>
+  <script src="js/Chart.roundedBarCharts.js"></script>
+  <!-- End custom js for this page-->
+  
+  window.dataLayer = window.dataLayer || [];
+  <script>
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-23581568-13');
+</script>
+
+</body>
+
+</html>
+
